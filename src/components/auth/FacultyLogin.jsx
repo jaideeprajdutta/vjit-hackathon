@@ -75,7 +75,7 @@ const FacultyLogin = () => {
       };
       
       loginUser(userData);
-      navigate('/dashboard');
+      navigate('/dashboard/faculty');
     } catch (error) {
       setErrors({ submit: 'Invalid faculty ID or password. Please try again.' });
     } finally {

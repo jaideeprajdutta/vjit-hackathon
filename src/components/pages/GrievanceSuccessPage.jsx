@@ -9,15 +9,15 @@ const GrievanceSuccessPage = () => {
   const { referenceId, grievanceData } = location.state || {};
 
   const handleTrackGrievance = () => {
-    navigate('/status-tracking', { state: { referenceId } });
+    navigate('/grievance/track', { state: { referenceId } });
   };
 
   const handleSubmitAnother = () => {
-    navigate('/enhanced-grievance-form');
+    navigate('/grievance/submit');
   };
 
   const handleGoToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/dashboard/student');
   };
 
   // If no reference ID, redirect to form

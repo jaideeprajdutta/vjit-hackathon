@@ -1,211 +1,136 @@
-# Grievance System Backend
+# Grievance System Backend API
 
-This is the backend API for the Grievance Redressal System with file upload support.
+A RESTful API for the Grievance Redressal System with file upload support.
 
 ## Features
 
-- **File Upload**: Secure file upload with validation
-- **File Management**: Download, preview, and delete files
-- **File Types**: Support for images, PDFs, documents, and text files
-- **Security**: File type validation, size limits, and secure storage
-- **API Endpoints**: RESTful API for file operations
+- 📝 Grievance management (CRUD operations)
+- 📎 File upload and management
+- 📊 Statistics and reporting
+- 🔍 Filtering and pagination
+- 🛡️ Error handling and validation
+- 📁 Organized modular structure
 
-## Setup Instructions
-
-### Prerequisites
-
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. Navigate to the backend directory:
-```bash
-cd grievance-system/backend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Create uploads directory (if not exists):
-```bash
-mkdir uploads
-```
-
-4. Start the development server:
-```bash
-npm run dev
-```
-
-The server will start on `http://localhost:5000`
-
-### Production Setup
-
-1. Install dependencies:
-```bash
-npm install --production
-```
-
-2. Start the server:
-```bash
-npm start
-```
-
-## API Endpoints
-
-### File Upload
-- **POST** `/api/upload`
-- Upload files for a grievance
-- **Body**: FormData with files and grievanceId
-- **Response**: Array of uploaded file metadata
-
-### Get Files
-- **GET** `/api/files/:grievanceId`
-- Get all files for a specific grievance
-- **Response**: Array of file metadata
-
-### Download File
-- **GET** `/api/download/:fileId`
-- Download a specific file
-- **Response**: File stream
-
-### Delete File
-- **DELETE** `/api/files/:fileId`
-- Delete a specific file
-- **Response**: Success confirmation
-
-### Preview File
-- **GET** `/api/preview/:fileId`
-- Get image preview (images only)
-- **Response**: Image stream
-
-### Health Check
-- **GET** `/api/health`
-- Check server status
-- **Response**: Server status and timestamp
-
-## File Upload Specifications
-
-### Supported File Types
-- **Images**: JPEG, PNG, GIF
-- **Documents**: PDF, DOC, DOCX, TXT
-
-### File Limits
-- **Maximum file size**: 10MB per file
-- **Maximum files per upload**: 5 files
-- **Total files per grievance**: Unlimited
-
-### Security Features
-- File type validation using MIME types
-- File size limits
-- Secure filename generation
-- Organized storage by grievance ID
-
-## Directory Structure
+## Project Structure
 
 ```
 backend/
-├── server.js          # Main server file
-├── package.json       # Dependencies and scripts
-├── uploads/           # File storage directory
-│   └── [grievanceId]/ # Files organized by grievance
-└── README.md          # This file
+├── src/
+│   ├── config/
+│   │   ├── database.js      # In-memory database (replace with real DB)
+│   │   └── multer.js        # File upload configuration
+│   ├── controllers/
+│   │   ├── fileController.js      # File operations
+│   │   └── grievanceController.js # Grievance operations
+│   ├── middleware/
+│   │   ├── cors.js          # CORS configuration
+│   │   └── errorHandler.js  # Error handling
+│   └── routes/
+│       ├── fileRoutes.js    # File-related routes
+│       ├── grievanceRoutes.js # Grievance-related routes
+│       └── index.js         # Route aggregation
+├── uploads/                 # File storage directory
+├── server.js               # Main server file
+├── package.json
+└── README.md
+```
+
+## Installation
+
+1. Navigate to the backend directory:
+   ```bash
+   cd grievance-system/backend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Copy environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Start the server:
+   ```bash
+   # Development mode with auto-reload
+   npm run dev
+   
+   # Production mode
+   npm start
+   ```
+
+## API Endpoints
+
+### Health Check
+- `GET /api/health` - Server health status
+
+### Grievances
+- `POST /api/grievances` - Create a new grievance
+- `GET /api/grievances` - Get all grievances (with filtering)
+- `GET /api/grievances/statistics` - Get grievance statistics
+- `GET /api/grievances/:id` - Get specific grievance
+- `PATCH /api/grievances/:id/status` - Update grievance status
+
+### Files
+- `POST /api/files/upload` - Upload files for a grievance
+- `GET /api/files/:grievanceId` - Get files for a grievance
+- `GET /api/files/download/:fileId` - Download a file
+- `GET /api/files/preview/:fileId` - Preview an image file
+- `DELETE /api/files/:fileId` - Delete a file
+
+## Usage Examples
+
+### Create a Grievance
+```bash
+curl -X POST http://localhost:5000/api/grievances \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Hostel Food Quality Issue",
+    "description": "The food quality in the hostel mess has deteriorated significantly.",
+    "category": "hostel",
+    "priority": "high",
+    "submitterName": "John Doe",
+    "submitterEmail": "john@example.com",
+    "submitterRole": "student",
+    "institution": "ABC University"
+  }'
+```
+
+### Upload Files
+```bash
+curl -X POST http://localhost:5000/api/files/upload \
+  -F "files=@document.pdf" \
+  -F "files=@image.jpg" \
+  -F "grievanceId=your-grievance-id" \
+  -F "description=Supporting documents"
+```
+
+### Get Grievances with Filters
+```bash
+curl "http://localhost:5000/api/grievances?status=submitted&category=academic&page=1&limit=10"
 ```
 
 ## Environment Variables
 
-Create a `.env` file in the backend directory:
+See `.env.example` for all available configuration options.
 
-```env
-PORT=5000
-NODE_ENV=development
-UPLOAD_DIR=./uploads
-MAX_FILE_SIZE=10485760
-MAX_FILES_PER_UPLOAD=5
-```
+## Adding New Features
 
-## Error Handling
+The modular structure makes it easy to add new features:
 
-The API includes comprehensive error handling for:
-- Invalid file types
-- File size exceeded
-- Too many files
-- Missing files
-- Server errors
-
-## CORS Configuration
-
-The server is configured to accept requests from:
-- `http://localhost:3000` (React development server)
-- Add your production domain as needed
-
-## Security Considerations
-
-1. **File Validation**: All files are validated for type and size
-2. **Secure Storage**: Files are stored with unique names to prevent conflicts
-3. **Access Control**: Implement authentication in production
-4. **Rate Limiting**: Consider adding rate limiting for production use
-5. **Virus Scanning**: Consider adding virus scanning for uploaded files
-
-## Production Deployment
-
-### Using PM2 (Recommended)
-
-1. Install PM2 globally:
-```bash
-npm install -g pm2
-```
-
-2. Start the application:
-```bash
-pm2 start server.js --name "grievance-backend"
-```
-
-3. Save PM2 configuration:
-```bash
-pm2 save
-pm2 startup
-```
-
-### Using Docker
-
-1. Create a Dockerfile:
-```dockerfile
-FROM node:16-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --production
-COPY . .
-EXPOSE 5000
-CMD ["npm", "start"]
-```
-
-2. Build and run:
-```bash
-docker build -t grievance-backend .
-docker run -p 5000:5000 -v $(pwd)/uploads:/app/uploads grievance-backend
-```
-
-## Monitoring and Logs
-
-- Use PM2 for process monitoring
-- Implement logging with Winston or similar
-- Monitor file storage usage
-- Set up health check endpoints
-
-## Backup Strategy
-
-- Regular backup of uploads directory
-- Database backup (when implemented)
-- Configuration backup
+1. **New Routes**: Add to `src/routes/`
+2. **New Controllers**: Add to `src/controllers/`
+3. **New Middleware**: Add to `src/middleware/`
+4. **Database Changes**: Modify `src/config/database.js`
 
 ## Future Enhancements
 
-- Database integration for file metadata
-- User authentication and authorization
-- File encryption at rest
-- CDN integration for file serving
-- Automated file cleanup
-- Advanced file processing (thumbnails, compression)
+- [ ] Replace in-memory database with PostgreSQL/MongoDB
+- [ ] Add JWT authentication
+- [ ] Add email notifications
+- [ ] Add real-time updates with WebSockets
+- [ ] Add API rate limiting
+- [ ] Add comprehensive logging
+- [ ] Add unit and integration tests

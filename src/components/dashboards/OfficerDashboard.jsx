@@ -4,11 +4,12 @@ import { useAppContext } from '../../context/AppContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { 
-  FileText, 
-  MessageSquare, 
-  Clock, 
-  CheckCircle, 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  FileText,
+  MessageSquare,
+  Clock,
+  CheckCircle,
   AlertTriangle,
   UserCheck,
   Eye,
@@ -26,7 +27,7 @@ import Layout from '../layout/Layout';
 const OfficerDashboard = () => {
   const { user } = useAppContext();
   const navigate = useNavigate();
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
 
   // Mock data for officer work queue
   const workQueue = [
@@ -140,7 +141,7 @@ const OfficerDashboard = () => {
             <h1 className="heading-lg text-black">Officer Dashboard</h1>
           </div>
           <p className="body-lg text-gray-600 max-w-2xl mx-auto">
-            Welcome, {user?.name || 'Grievance Officer'}. Manage your assigned grievances, 
+            Welcome, {user?.name || 'Grievance Officer'}. Manage your assigned grievances,
             communicate with users, and track resolution progress efficiently.
           </p>
         </div>
@@ -224,16 +225,16 @@ const OfficerDashboard = () => {
                 );
               })}
             </div>
-            
+
             <div className="mt-6 flex flex-col sm:flex-row gap-4">
-              <Button 
+              <Button
                 className="btn-primary flex-1"
                 onClick={() => navigate('/officer/bulk-update')}
               >
                 <Send className="h-4 w-4 mr-2" />
                 Bulk Status Update
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 className="flex-1 border-[#A2D5C6] text-black hover:bg-[#A2D5C6]"
                 onClick={() => navigate('/officer/send-notification')}
@@ -255,7 +256,18 @@ const OfficerDashboard = () => {
               </CardDescription>
             </div>
             <div className="flex space-x-2">
-              <Button 
+              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Filter by Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priority</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={() => navigate('/officer/filter')}
@@ -264,7 +276,7 @@ const OfficerDashboard = () => {
                 <Filter className="h-4 w-4 mr-2" />
                 Filter
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={() => navigate('/officer/all-cases')}
@@ -278,7 +290,7 @@ const OfficerDashboard = () => {
           <CardContent>
             <div className="space-y-4">
               {workQueue.map((case_item) => (
-                <div 
+                <div
                   key={case_item.id}
                   className="flex items-center justify-between p-4 border border-[#A2D5C6]/20 rounded-lg hover:bg-gray-50 transition-colors"
                 >
@@ -304,8 +316,8 @@ const OfficerDashboard = () => {
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => navigate(`/officer/case/${case_item.id}`)}
                       className="text-black hover:bg-[#A2D5C6]"
@@ -313,8 +325,8 @@ const OfficerDashboard = () => {
                       <Eye className="h-4 w-4 mr-1" />
                       View
                     </Button>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => navigate(`/officer/case/${case_item.id}/update`)}
                       className="text-blue-600 hover:bg-blue-50"
@@ -322,8 +334,8 @@ const OfficerDashboard = () => {
                       <Send className="h-4 w-4 mr-1" />
                       Update
                     </Button>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => navigate(`/officer/case/${case_item.id}/contact`)}
                       className="text-green-600 hover:bg-green-50"
@@ -357,7 +369,7 @@ const OfficerDashboard = () => {
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div className="bg-green-600 h-2 rounded-full" style={{ width: '80%' }}></div>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Average Response Time</span>
                   <span className="font-semibold text-blue-600">1.8 days</span>
@@ -365,7 +377,7 @@ const OfficerDashboard = () => {
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div className="bg-blue-600 h-2 rounded-full" style={{ width: '90%' }}></div>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">User Satisfaction Rating</span>
                   <span className="font-semibold text-purple-600">4.6/5</span>
@@ -422,18 +434,18 @@ const OfficerDashboard = () => {
           <CardContent className="text-center space-y-4 p-8">
             <h3 className="heading-sm text-black">Officer Resources</h3>
             <p className="body-md text-gray-700 max-w-2xl mx-auto">
-              Access processing guidelines, communication templates, and reporting tools 
+              Access processing guidelines, communication templates, and reporting tools
               to efficiently handle grievances and maintain high service standards.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
+              <Button
                 variant="outline"
                 className="border-black text-black hover:bg-black hover:text-white"
                 onClick={() => navigate('/officer/guidelines')}
               >
                 Processing Guidelines
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 className="border-black text-black hover:bg-black hover:text-white"
                 onClick={() => navigate('/officer/templates')}
@@ -445,150 +457,6 @@ const OfficerDashboard = () => {
         </Card>
       </div>
     </Layout>
-  );
-};
-
-export default OfficerDashboard;={p
-riorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Priority</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {workQueue.map((grievance) => (
-              <div
-                key={grievance.id}
-                className="p-4 border border-[#A2D5C6]/20 rounded-lg hover:border-[#A2D5C6] hover:shadow-sm transition-all duration-200"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-medium text-black">{grievance.title}</h4>
-                      {getPriorityBadge(grievance.priority)}
-                      {getStatusBadge(grievance.status)}
-                    </div>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600 mb-2">
-                      <span>ID: {grievance.id}</span>
-                      <span>By: {grievance.submittedBy}</span>
-                      <span>Category: {grievance.category}</span>
-                      <span className={getDaysOpenColor(grievance.daysOpen)}>
-                        Days Open: {grievance.daysOpen}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-700 mb-2">{grievance.description}</p>
-                    <div className="text-sm text-gray-500">
-                      Submitted: {new Date(grievance.submittedDate).toLocaleDateString()} | 
-                      Last Update: {new Date(grievance.lastUpdate).toLocaleDateString()}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setSelectedGrievance(grievance)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => handleCommunication(grievance.id, 'email')}
-                    >
-                      <Mail className="h-4 w-4" />
-                    </Button>
-                    <Select onValueChange={(value) => handleStatusUpdate(grievance.id, value)}>
-                      <SelectTrigger className="w-32">
-                        <SelectValue placeholder="Update Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="in-progress">In Progress</SelectItem>
-                        <SelectItem value="resolved">Resolved</SelectItem>
-                        <SelectItem value="closed">Closed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recent Communications */}
-      <Card className="card-professional">
-        <CardHeader>
-          <CardTitle className="text-xl text-black">Recent Communications</CardTitle>
-          <CardDescription>Your recent interactions with complainants</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {recentCommunications.map((comm) => (
-              <div
-                key={comm.id}
-                className="flex items-center justify-between p-4 border border-[#A2D5C6]/20 rounded-lg"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-[#CFFFE2] rounded-lg">
-                    {comm.type === 'email' ? (
-                      <Mail className="h-5 w-5 text-black" />
-                    ) : (
-                      <Phone className="h-5 w-5 text-black" />
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-black">{comm.subject}</h4>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span>To: {comm.recipient}</span>
-                      <span>Re: {comm.grievanceId}</span>
-                      <span>Sent: {new Date(comm.sentDate).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                </div>
-                <Badge className="bg-green-100 text-green-800">{comm.status}</Badge>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Officer Performance */}
-      <Card className="card-professional bg-[#CFFFE2]/10">
-        <CardContent className="p-6">
-          <div className="flex items-start gap-4">
-            <div className="p-2 bg-[#CFFFE2] rounded-lg">
-              <TrendingUp className="h-6 w-6 text-black" />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-black mb-2">Performance Summary</h4>
-              <p className="text-sm text-gray-600 mb-4">
-                This week: 12 grievances processed, 94% resolution rate, average response time: 1.2 days
-              </p>
-              <div className="flex gap-3">
-                <Button variant="outline" size="sm">
-                  View Detailed Report
-                </Button>
-                <Button variant="outline" size="sm">
-                  Performance Metrics
-                </Button>
-                <Button variant="outline" size="sm">
-                  Training Resources
-                </Button>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
   );
 };
 

@@ -74,7 +74,7 @@ const StudentLogin = () => {
       };
       
       loginUser(userData);
-      navigate('/dashboard');
+      navigate('/dashboard/student');
     } catch (error) {
       setErrors({ submit: 'Invalid roll number or password. Please try again.' });
     } finally {

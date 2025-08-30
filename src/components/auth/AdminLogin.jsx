@@ -75,7 +75,7 @@ const AdminLogin = () => {
       };
       
       loginUser(userData);
-      navigate('/admin-dashboard');
+      navigate('/dashboard/admin');
     } catch (error) {
       setErrors({ submit: 'Invalid admin ID or password. Please try again.' });
     } finally {

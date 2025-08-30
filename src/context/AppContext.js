@@ -82,6 +82,7 @@ const appReducer = (state, action) => {
         ...state,
         user: {
           ...state.user,
+          ...action.payload,
           isAuthenticated: true,
         },
       };
@@ -204,8 +205,8 @@ export const AppContextProvider = ({ children }) => {
     }, 500);
   };
 
-  const loginUser = () => {
-    dispatch({ type: actionTypes.LOGIN_USER });
+  const loginUser = (userData) => {
+    dispatch({ type: actionTypes.LOGIN_USER, payload: userData });
   };
 
   const logoutUser = () => {

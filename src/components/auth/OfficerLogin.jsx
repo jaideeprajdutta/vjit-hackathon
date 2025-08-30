@@ -76,7 +76,7 @@ const OfficerLogin = () => {
       };
       
       loginUser(userData);
-      navigate('/dashboard');
+      navigate('/dashboard/officer');
     } catch (error) {
       setErrors({ submit: 'Invalid officer ID or password. Please try again.' });
     } finally {

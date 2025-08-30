@@ -181,7 +181,7 @@ const EnhancedGrievanceForm = () => {
       console.log('Grievance submitted:', grievanceData);
 
       // Navigate to success page
-      navigate('/grievance-success', { 
+      navigate('/grievance/success', { 
         state: { 
           referenceId,
           grievanceData: {

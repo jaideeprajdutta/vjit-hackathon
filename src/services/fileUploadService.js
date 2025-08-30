@@ -3,7 +3,7 @@
  * Handles file uploads, downloads, and management
  */
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 class FileUploadService {
   /**
@@ -64,7 +64,7 @@ class FileUploadService {
           reject(new Error('Upload timeout'));
         });
 
-        xhr.open('POST', `${API_BASE_URL}/upload`);
+        xhr.open('POST', `${API_BASE_URL}/files/upload`);
         xhr.timeout = 300000; // 5 minutes timeout
         xhr.send(formData);
       });
@@ -100,7 +100,7 @@ class FileUploadService {
    */
   async downloadFile(fileId, filename) {
     try {
-      const response = await fetch(`${API_BASE_URL}/download/${fileId}`);
+      const response = await fetch(`${API_BASE_URL}/files/download/${fileId}`);
       
       if (!response.ok) {
         const error = await response.json();
@@ -151,7 +151,7 @@ class FileUploadService {
    * @param {string} fileId - File ID
    */
   getPreviewUrl(fileId) {
-    return `${API_BASE_URL}/preview/${fileId}`;
+    return `${API_BASE_URL}/files/preview/${fileId}`;
   }
 
   /**
